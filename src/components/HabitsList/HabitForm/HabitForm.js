@@ -14,6 +14,10 @@ export default class HabitForm extends Component {
     color: "",
     remind: false,
   };
+  closeId = null;
+  componentWillUnmount() {
+    clearTimeout(this.closeId);
+  }
   handleSubmit = (event) => {
     event.preventDefault();
     const { title, comment, color, repeat, remind } = this.state;
@@ -36,6 +40,8 @@ export default class HabitForm extends Component {
       color: "",
       remind: false,
     });
+    alert("Привычка добавлена");
+    this.closeId = setTimeout(this.props.modalToggle, 1000);
   };
   handleChange = ({ target }) => {
     this.setState({ [target.name]: target.type === "checbox" ? target.checked : target.value });
