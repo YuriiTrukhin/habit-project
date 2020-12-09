@@ -1,0 +1,1 @@
+{"version":3,"sources":["webpack://src/components/Profile/Profile.module.css"],"names":[],"mappings":"AAAA,qBACE,YAAa,CACb,qBAAsB,CACtB,WAAY,CACZ,aACF","file":"5.fae7c0ab.chunk.css","sourcesContent":[".form{\r\n  display: flex;\r\n  flex-direction: column;\r\n  width: 500px;\r\n  margin: 0 auto;\r\n}\r\n"]}
