@@ -3,10 +3,19 @@ import React, { Component } from "react";
 import HabitItem from "./HabitItem/HabitItem.js";
 import Modal from "../Modal/Modal";
 import HabbiForm from "./HabitForm/HabitForm";
+import { Link } from "react-router-dom";
+import routes from "../../routes";
+import Context from "../../context/Context";
+import UserContext from "../../context/Context";
+import withContext from "../../components/hoc/withContext";
+import { connect } from "react-redux";
+import getState from "redux";
+import store from "../../redux/store";
+import removeHabbit from "../../redux/actions/habitActions";
 
 // import {v4 }
 
-export default class HabitsList extends Component {
+class HabitsList extends Component {
   // static propTypes = {
   //   prop: PropTypes,
   // };
@@ -14,6 +23,13 @@ export default class HabitsList extends Component {
   state = {
     habits: [{ id: "", title: "зарядка", startDate: "", progress: "" }],
   };
+  componentDidMount() {
+    const array = JSON.parse(localStorage.getItem("state")) || [];
+    this.setState({ habits: array });
+  }
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState !== this.state) localStorage.setItem("state", JSON.stringify(this.state.habits));
+  }
   toAddHabit = (habit) => {
     this.setState((prevState) => ({
       habits: [...prevState.habits, habit],
@@ -30,12 +46,20 @@ export default class HabitsList extends Component {
     });
   };
   render() {
-    const { habits } = this.state;
+    const habits = store.getState().habits;
+    console.log(store);
+    const user = store.getState();
     return (
+      // <UserContext.Consumer>
+      //   {({ user }) => {
+      //     return (
       <>
         <header>
           <div>My accaunt</div>
-          <button type="button">Close</button>
+          <img src={user.avatar} alt={user.name} />
+          <Link to="/" className="link">
+            Назад
+          </Link>
         </header>
         {this.props.showModal && (
           <Modal modalToggle={this.props.modalToggle}>
@@ -45,10 +69,19 @@ export default class HabitsList extends Component {
         )}
         <div> Календарь </div>
         <h1>Мои привычки</h1>
-        {this.state.habits.length ? (
+        {user.habits.length ? (
           <ul>
-            {habits.map((habit) => {
-              return <HabitItem key={habit.id} progress="" title={habit.title} progress={habit.progress} />;
+            {user.habits.map((habit) => {
+              return (
+                <Link key={habit.id} to={`${routes.HabitsList}/${habit.id}`}>
+                  <HabitItem
+                    progress=""
+                    title={habit.title}
+                    //  progress={habit.progress}
+                    id={habit.id}
+                  />
+                </Link>
+              );
             })}
           </ul>
         ) : (
@@ -58,6 +91,15 @@ export default class HabitsList extends Component {
           +
         </button>
       </>
+      //     );
+      //   }}
+      // </UserContext.Consumer>
     );
   }
 }
+const mapStateToProps = (state) => ({
+  habbits: state.habits,
+});
+const mapDispatchToProps = { removeHabbit: removeHabbit };
+
+export default connect(mapStateToProps, mapDispatchToProps)(HabitsList);

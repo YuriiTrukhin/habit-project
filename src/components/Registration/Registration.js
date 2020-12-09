@@ -1,8 +1,14 @@
 import React, { Component } from "react";
 import styles from "./Registration.module.css";
+import { NavLink } from "react-router-dom";
+import { connect } from "react-redux";
+import store from "../../redux/store";
+
+import addUser from "../../redux/actions/habitActions";
 
 class Registration extends Component {
   state = {
+    id: "",
     name: "",
     surname: "",
     tel: "",
@@ -13,17 +19,22 @@ class Registration extends Component {
     });
   };
   handleSubmit = (e) => {
+    console.log(store.getState());
+    const { name, surname, tel, id } = this.state;
     e.preventDefault();
-    alert(JSON.stringify(this.state));
+    addUser.addUser();
+    this.props.history.push({
+      pathname: "/profile",
+    });
   };
   render() {
     const { name, surname, tel } = this.state;
     return (
       <>
         <div className={styles.header}>
-          <button type="button" className={styles.toBack}>
+          <NavLink to="/" className="link">
             Назад
-          </button>
+          </NavLink>
         </div>
         <form action="submit" className={styles.form} onSubmit={this.handleSubmit}>
           <label htmlFor="name">Имя</label>
@@ -41,4 +52,8 @@ class Registration extends Component {
     );
   }
 }
-export default Registration;
+const mapDispatchToProps = { addUser: addUser.addUser };
+const mapStateToProps = (state, props) => ({
+  state,
+});
+export default connect(mapStateToProps, mapDispatchToProps)(Registration);

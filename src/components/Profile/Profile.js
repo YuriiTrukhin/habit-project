@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import styles from "./Profile.module.css";
+import { Link } from "react-router-dom";
 
 class Profile extends Component {
   state = {
@@ -14,7 +15,10 @@ class Profile extends Component {
   };
   handleOnSubmit = (e) => {
     e.preventDefault();
-    alert(JSON.stringify(this.state, null, 2));
+
+    this.props.addUser(this.state);
+    
+    // alert(JSON.stringify(this.state, null, 2));
     // this.setState({
     //   avatar: "",
     //   height: "",
@@ -25,7 +29,9 @@ class Profile extends Component {
   render() {
     return (
       <>
-        <button type="button">Назад</button>
+        <Link to="/" className="link">
+          На главную
+        </Link>
         <form action="" className={styles.form} onSubmit={this.handleOnSubmit}>
           <label htmlFor="">
             {" "}
@@ -66,6 +72,9 @@ class Profile extends Component {
 
           <input type="submit" value="Создать" />
         </form>
+        <Link to="/profile/habitList" className="link">
+          На Хабитлист
+        </Link>
       </>
     );
   }

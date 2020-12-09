@@ -1,9 +1,31 @@
 import React, { Component } from "react";
 import styles from "../HabitForm/HabitForm.module.css";
 import { v4 as uuidv4 } from "uuid";
+import { connect } from "react-redux";
+import addHabit from "../../../redux/actions/habitActions";
 // import PropTypes from "prop-types";
-
-export default class HabitForm extends Component {
+// const store = {
+//   user: {
+//     email: "dslfjslkfj@gmail.com",
+//     id: 1,
+//     name: "Mango",
+//     phone: 309039994,
+//     avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIeS9qhRY8m3uQ5fNWdIKzjj_Cjb2O7JLAmA&usqp=CAU",
+//     habits: [
+//       {
+//         id: 1,
+//         title: "pol",
+//         comment: "no",
+//         repeat: "every day",
+//         color: "#FF7E00",
+//         remind: false,
+//         progress: "10%",
+//       },
+//     ],
+//   },
+//   allHabbits: [],
+// };
+class HabitForm extends Component {
   // static propTypes = {
   //   prop: PropTypes,
   // };
@@ -15,9 +37,7 @@ export default class HabitForm extends Component {
     remind: false,
   };
   closeId = null;
-  componentWillUnmount() {
-    clearTimeout(this.closeId);
-  }
+
   handleSubmit = (event) => {
     event.preventDefault();
     const { title, comment, color, repeat, remind } = this.state;
@@ -32,17 +52,21 @@ export default class HabitForm extends Component {
       progress: this.toSetProgress(Date.now()),
       // finishDate: Date.now() * 21 * 24 * 60 * 60 * 1000,
     };
-    this.props.toAddHabit(habit);
+    // this.props.toAddHabit(habit);=prop from app
+    this.props.addHabit(habit);
     this.setState({
       title: "",
       comment: "",
       repeat: "",
-      color: "",
+      color: "#FF7E00",
       remind: false,
     });
     alert("Привычка добавлена");
     this.closeId = setTimeout(this.props.modalToggle, 1000);
   };
+  componentWillUnmount() {
+    clearTimeout(this.closeId);
+  }
   handleChange = ({ target }) => {
     this.setState({ [target.name]: target.type === "checbox" ? target.checked : target.value });
   };
@@ -92,3 +116,12 @@ export default class HabitForm extends Component {
     );
   }
 }
+// const mapStateToProps = (state) => ({
+//   habbits: state.habbits,
+// });
+// const mapDispatchToProps = dispatch => ({
+//   addHabbit: obj => dispatch(actions.addHabbit(obj))
+// });
+const mapDispatchToProps = { addHabit: addHabit };
+
+export default connect(mapDispatchToProps)(HabitForm);
